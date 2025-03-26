@@ -80,4 +80,22 @@ export class UsersService {
 
     return { message: 'Usuário removido (deleção lógica).' };
   }
+
+  async redefinirSenha(email: string, chave: string, novaSenha: string): Promise<{ message: string }> {
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) throw new NotFoundException('Usuário não encontrado.');
+    if (user.recuperacao !== chave) throw new ForbiddenException('Palavra-chave incorreta.');
+  
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(novaSenha, salt);
+    await this.usersRepository.save(user);
+    return { message: 'Senha redefinida com sucesso.' };
+  }
+
+  async validarRecuperacao(email: string, chave: string): Promise<{ valid: boolean }> {
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) throw new NotFoundException('Usuário não encontrado.');
+    if (user.recuperacao !== chave) throw new ForbiddenException('Palavra-chave incorreta.');
+    return { valid: true };
+  }
 }

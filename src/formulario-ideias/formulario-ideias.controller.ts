@@ -11,10 +11,11 @@ export class FormularioIdeiasController {
   constructor(private readonly formularioService: FormularioIdeiasService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt')) // 🔒 Apenas usuários logados podem cadastrar
+  @UseGuards(AuthGuard('jwt'))
   async create(@Request() req, @Body() dto: CreateFormularioIdeiasDto) {
     return this.formularioService.create(req.user, dto);
   }
+
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt')) // 🔒 Apenas logados podem editar
