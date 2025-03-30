@@ -14,6 +14,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -42,7 +43,7 @@ export class UsersController {
   async updateUser(
     @Request() req: { user: User },
     @Param('id') id: number,
-    @Body() updateData: Partial<User>
+    @Body() updateData:  UpdateUserDto
   ) {
     return this.usersService.updateUser(req.user, id, updateData);
   }
@@ -85,4 +86,11 @@ export class UsersController {
   ) {
     return this.usersService.redefinirSenha(email, body.recuperacao, body.novaSenha);
   }
+
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  async findAll(@Request() req: { user: User }) {
+    return this.usersService.findAll(req.user);
+  }
+
 }

@@ -55,6 +55,19 @@ export class FormularioIdeiasService {
     if (user.role !== Role.ADMIN) {
       throw new ForbiddenException('Apenas administradores podem listar todos os formulários.');
     }
-    return this.formularioRepository.find();
+  
+    return this.formularioRepository.find({
+      where: { foi_apagado: false },
+      order: { data_envio: 'DESC' },
+    });
   }
+
+  async findByUser(user: User): Promise<FormularioIdeias[]> {
+    return this.formularioRepository.find({
+      where: { usuario: { id: user.id }, foi_apagado: false },
+      relations: ['usuario'], 
+      order: { data_envio: 'DESC' },
+    });
+  }
+  
 }

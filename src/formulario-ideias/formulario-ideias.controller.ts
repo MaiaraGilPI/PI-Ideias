@@ -34,4 +34,11 @@ export class FormularioIdeiasController {
   async findAll(@Request() req) {
     return this.formularioService.findAll(req.user);
   }
+
+  @Get('minhas')
+  @UseGuards(AuthGuard('jwt'))
+  async findMine(@Request() req) {
+    return this.formularioService.findByUser(req.user);
+  }
+
 }

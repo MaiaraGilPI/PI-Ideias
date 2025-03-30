@@ -49,6 +49,11 @@ export class UsersService {
       throw new ForbiddenException('Apenas administradores podem editar usuários.');
     }
 
+    if (updateData.password) {
+      const salt = await bcrypt.genSalt(10);
+      updateData.password = await bcrypt.hash(updateData.password, salt);
+    }
+
     const user = await this.usersRepository.findOne({ where: { id: userId } });
 
     if (!user) {
@@ -98,4 +103,13 @@ export class UsersService {
     if (user.recuperacao !== chave) throw new ForbiddenException('Palavra-chave incorreta.');
     return { valid: true };
   }
+
+  async findAll(requestingUser: User): Promise<User[]> {
+    if (requestingUser.role !== Role.ADMIN) {
+      throw new ForbiddenException('Apenas administradores podem listar usuários.');
+    }
+  
+    return this.usersRepository.find();
+  }
+  
 }

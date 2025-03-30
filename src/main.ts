@@ -7,7 +7,7 @@ async function bootstrap() {
 
   // 💥 Libera requisições do front em http://localhost:5173 (Vite)
   app.enableCors({
-    origin: 'http://localhost:5174',
+    origin: 'http://localhost:5173',
   });
 
   await app.listen(process.env.PORT ?? 3000);
