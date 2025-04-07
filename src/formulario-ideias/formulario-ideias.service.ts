@@ -58,6 +58,7 @@ export class FormularioIdeiasService {
   
     return this.formularioRepository.find({
       where: { foi_apagado: false },
+      relations: ['usuario'],
       order: { data_envio: 'DESC' },
     });
   }
